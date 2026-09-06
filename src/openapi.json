@@ -1,0 +1,322 @@
+{
+  "openapi": "1.0.0",
+  "info": {
+    "title": "Daps",
+    "author": "Daps",
+    "version": "v1.0.0",
+    "description": "Simple and easy to use API."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Downloader"
+    },
+    {
+      "name": "Image"
+    },
+    {
+      "name": "News"
+    }
+  ],
+  "paths": {
+    "/download/spotify": {
+      "get": {
+        "summary": "Spotify / Spotify Play",
+        "description": "Cari dan download musik Spotify berdasarkan judul lagu atau URL track Spotify",
+        "tags": [
+          "Downloader"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Judul lagu atau URL track Spotify",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respon berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "creator": {
+                      "type": "string",
+                      "example": "Daps"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "Sesi Potret"
+                        },
+                        "artist": {
+                          "type": "string",
+                          "example": "eńau, Ari Lesmana"
+                        },
+                        "album": {
+                          "type": "string",
+                          "example": "Sesi Potret"
+                        },
+                        "duration": {
+                          "type": "string",
+                          "example": "4:03"
+                        },
+                        "image": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://i.scdn.co/image/..."
+                        },
+                        "download_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://rapid.spotidown.app/..."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameter query atau url tidak disertakan"
+          },
+          "500": {
+            "description": "Gagal memproses request atau lagu tidak ditemukan"
+          }
+        }
+      }
+    },
+    "/download/spotifyplay": {
+      "get": {
+        "summary": "Spotify Play",
+        "description": "Play dan download musik Spotify berdasarkan judul lagu atau query",
+        "tags": [
+          "Downloader"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Judul lagu atau URL track Spotify",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respon berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "creator": {
+                      "type": "string",
+                      "example": "Daps"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "example": "Sesi Potret"
+                        },
+                        "artist": {
+                          "type": "string",
+                          "example": "eńau, Ari Lesmana"
+                        },
+                        "album": {
+                          "type": "string",
+                          "example": "Sesi Potret"
+                        },
+                        "duration": {
+                          "type": "string",
+                          "example": "4:03"
+                        },
+                        "image": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://i.scdn.co/image/..."
+                        },
+                        "download_url": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://rapid.spotidown.app/..."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameter query atau url tidak disertakan"
+          },
+          "500": {
+            "description": "Gagal memproses request atau lagu tidak ditemukan"
+          }
+        }
+      }
+    },
+    "/image/bluearchive": {
+      "get": {
+        "summary": "Blue Archive",
+        "description": "Blue Archive Random Images",
+        "tags": [
+          "Image"
+        ],
+        "responses": {
+          "200": {
+            "description": "Respon berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "images": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal memproses request"
+          }
+        }
+      }
+    },
+    "/news/detik": {
+      "get": {
+        "summary": "Detik News",
+        "description": "Scraping berita terpopuler dari Detik.com",
+        "tags": [
+          "News"
+        ],
+        "responses": {
+          "200": {
+            "description": "Respon berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "berita": {
+                        "type": "string",
+                        "example": "Judul berita terpopuler Detik"
+                      },
+                      "berita_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://news.detik.com/berita/..."
+                      },
+                      "berita_thumb": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "example": "https://akcdn.detik.net.id/...jpg"
+                      },
+                      "berita_diupload": {
+                        "type": "string",
+                        "example": "Senin, 25 Nov 2024 10:30 WIB"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal memproses request"
+          }
+        }
+      }
+    },
+    "/news/kontan": {
+      "get": {
+        "summary": "Kontan News",
+        "description": "Scraping berita terbaru dari Kontan.co.id",
+        "tags": [
+          "News"
+        ],
+        "responses": {
+          "200": {
+            "description": "Respon berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "berita": {
+                        "type": "string",
+                        "example": "Rupiah menguat terhadap dolar AS pada perdagangan pagi ini"
+                      },
+                      "berita_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://www.kontan.co.id/news/rupiah-menguat"
+                      },
+                      "berita_thumb": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "example": "https://img.kontan.co.id/thumb.jpg"
+                      },
+                      "berita_jenis": {
+                        "type": "string",
+                        "example": "Makro Ekonomi"
+                      },
+                      "berita_diupload": {
+                        "type": "string",
+                        "example": "2 jam lalu"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal memproses request"
+          }
+        }
+      }
+    }
+  }
+}
