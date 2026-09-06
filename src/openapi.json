@@ -20,9 +20,78 @@
     },
     {
       "name": "News"
-    }
+    },
+    {
+      "name": "Tools"
   ],
   "paths": {
+  "/tools/pixiv/search": {
+  "get": {
+    "summary": "Cari ilustrasi Pixiv",
+    "description": "Mencari ilustrasi berdasarkan keyword. Jika no_upload=true, thumbnail tidak diupload.",
+    "tags": ["tools", "pixiv"],
+    "parameters": [
+      { "name": "q", "in": "query", "required": true, "type": "string", "description": "Kata kunci pencarian" },
+      { "name": "page", "in": "query", "required": false, "type": "integer", "description": "Halaman pencarian (default 1)" },
+      { "name": "limit", "in": "query", "required": false, "type": "integer", "description": "Jumlah hasil maksimal" },
+      { "name": "order", "in": "query", "required": false, "type": "string", "description": "Urutan (date_d, popular_d, dll)" },
+      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis thumbnail" }
+    ],
+    "responses": {
+      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": [ { "id": "123", "title": "...", "thumb": "..." } ] } } },
+      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'q' wajib diisi" } } },
+      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+    }
+  }
+},
+"/tools/pixiv/detail": {
+  "get": {
+    "summary": "Detail karya Pixiv",
+    "description": "Mengambil detail lengkap sebuah karya beserta link upload gambar langsung.",
+    "tags": ["tools", "pixiv"],
+    "parameters": [
+      { "name": "id", "in": "query", "required": true, "type": "string", "description": "ID karya Pixiv (tanpa URL)" },
+      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis gambar" }
+    ],
+    "responses": {
+      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": { "id": "123", "title": "...", "pages": [] } } } },
+      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'id' (angka) wajib diisi" } } },
+      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+    }
+  }
+},
+"/tools/pixiv/download": {
+  "get": {
+    "summary": "Download karya Pixiv",
+    "description": "Mengunduh file gambar asli ke direktori lokal server.",
+    "tags": ["tools", "pixiv"],
+    "parameters": [
+      { "name": "id", "in": "query", "required": true, "type": "string", "description": "ID karya Pixiv" },
+      { "name": "all_pages", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mengunduh semua halaman" },
+      { "name": "out_dir", "in": "query", "required": false, "type": "string", "description": "Folder tujuan (default 'downloads')" }
+    ],
+    "responses": {
+      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": { "files": [ { "page": 0, "file": "downloads/123_p0.png" } ] } } } },
+      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'id' (angka) wajib diisi" } } },
+      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+    }
+  }
+},
+"/tools/pixiv/random": {
+  "get": {
+    "summary": "Random Pixiv",
+    "description": "Mengambil sejumlah karya secara acak.",
+    "tags": ["tools", "pixiv"],
+    "parameters": [
+      { "name": "num", "in": "query", "required": false, "type": "integer", "description": "Jumlah karya acak (default 5)" },
+      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis" }
+    ],
+    "responses": {
+      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": [ { "id": "456", "title": "..." } ] } } },
+      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+    }
+  }
+}
     "/download/spotify": {
       "get": {
         "summary": "Spotify / Spotify Play",
