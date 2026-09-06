@@ -23,6 +23,7 @@
     },
     {
       "name": "Tools"
+    }
   ],
   "paths": {
 "/tools/pixiv/search": {
