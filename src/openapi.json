@@ -25,70 +25,191 @@
       "name": "Tools"
   ],
   "paths": {
-  "/tools/pixiv/search": {
+"/tools/pixiv/search": {
   "get": {
-    "summary": "Cari ilustrasi Pixiv",
-    "description": "Mencari ilustrasi berdasarkan keyword. Jika no_upload=true, thumbnail tidak diupload.",
-    "tags": ["tools", "pixiv"],
+    "summary": "Pixiv Search",
+    "description": "Mencari karya Pixiv berdasarkan kata kunci",
+    "tags": ["Tools"],
     "parameters": [
-      { "name": "q", "in": "query", "required": true, "type": "string", "description": "Kata kunci pencarian" },
-      { "name": "page", "in": "query", "required": false, "type": "integer", "description": "Halaman pencarian (default 1)" },
-      { "name": "limit", "in": "query", "required": false, "type": "integer", "description": "Jumlah hasil maksimal" },
-      { "name": "order", "in": "query", "required": false, "type": "string", "description": "Urutan (date_d, popular_d, dll)" },
-      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis thumbnail" }
+      {
+        "name": "q",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "Kata kunci pencarian"
+      },
+      {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer" },
+        "description": "Halaman pencarian (default 1)"
+      },
+      {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer" },
+        "description": "Jumlah hasil maksimal"
+      },
+      {
+        "name": "no_upload",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Set 'true' untuk mematikan upload thumbnail"
+      }
     ],
     "responses": {
-      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": [ { "id": "123", "title": "...", "thumb": "..." } ] } } },
-      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'q' wajib diisi" } } },
-      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+      "200": {
+        "description": "Respon berhasil",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "boolean", "example": true },
+                "creator": { "type": "string", "example": "Daps" },
+                "result": { "type": "array", "items": { "type": "object" } }
+              }
+            }
+          }
+        }
+      },
+      "400": { "description": "Parameter q wajib diisi" },
+      "500": { "description": "Gagal memproses request" }
     }
   }
 },
 "/tools/pixiv/detail": {
   "get": {
-    "summary": "Detail karya Pixiv",
-    "description": "Mengambil detail lengkap sebuah karya beserta link upload gambar langsung.",
-    "tags": ["tools", "pixiv"],
+    "summary": "Pixiv Detail",
+    "description": "Mengambil detail karya dan link gambar Pixiv berdasarkan ID",
+    "tags": ["Tools"],
     "parameters": [
-      { "name": "id", "in": "query", "required": true, "type": "string", "description": "ID karya Pixiv (tanpa URL)" },
-      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis gambar" }
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "ID karya Pixiv"
+      },
+      {
+        "name": "no_upload",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Set 'true' untuk mematikan upload gambar"
+      }
     ],
     "responses": {
-      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": { "id": "123", "title": "...", "pages": [] } } } },
-      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'id' (angka) wajib diisi" } } },
-      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+      "200": {
+        "description": "Respon berhasil",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "boolean", "example": true },
+                "creator": { "type": "string", "example": "Daps" },
+                "result": { "type": "object" }
+              }
+            }
+          }
+        }
+      },
+      "400": { "description": "Parameter id wajib diisi" },
+      "500": { "description": "Gagal memproses request" }
     }
   }
 },
 "/tools/pixiv/download": {
   "get": {
-    "summary": "Download karya Pixiv",
-    "description": "Mengunduh file gambar asli ke direktori lokal server.",
-    "tags": ["tools", "pixiv"],
+    "summary": "Pixiv Download",
+    "description": "Mengunduh file gambar asli Pixiv ke direktori lokal",
+    "tags": ["Tools"],
     "parameters": [
-      { "name": "id", "in": "query", "required": true, "type": "string", "description": "ID karya Pixiv" },
-      { "name": "all_pages", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mengunduh semua halaman" },
-      { "name": "out_dir", "in": "query", "required": false, "type": "string", "description": "Folder tujuan (default 'downloads')" }
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "ID karya Pixiv"
+      },
+      {
+        "name": "all_pages",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Set 'true' untuk mengunduh semua halaman"
+      },
+      {
+        "name": "out_dir",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Folder tujuan (default 'downloads')"
+      }
     ],
     "responses": {
-      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": { "files": [ { "page": 0, "file": "downloads/123_p0.png" } ] } } } },
-      "400": { "description": "Bad Request", "schema": { "type": "object", "example": { "status": false, "error": "Parameter 'id' (angka) wajib diisi" } } },
-      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+      "200": {
+        "description": "Respon berhasil",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "boolean", "example": true },
+                "creator": { "type": "string", "example": "Daps" },
+                "result": { "type": "object" }
+              }
+            }
+          }
+        }
+      },
+      "400": { "description": "Parameter id wajib diisi" },
+      "500": { "description": "Gagal memproses request" }
     }
   }
 },
 "/tools/pixiv/random": {
   "get": {
-    "summary": "Random Pixiv",
-    "description": "Mengambil sejumlah karya secara acak.",
-    "tags": ["tools", "pixiv"],
+    "summary": "Pixiv Random",
+    "description": "Mengambil sejumlah karya secara acak dari Pixiv",
+    "tags": ["Tools"],
     "parameters": [
-      { "name": "num", "in": "query", "required": false, "type": "integer", "description": "Jumlah karya acak (default 5)" },
-      { "name": "no_upload", "in": "query", "required": false, "type": "string", "description": "Set 'true' untuk mematikan upload otomatis" }
+      {
+        "name": "num",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "integer" },
+        "description": "Jumlah karya acak (default 5)"
+      },
+      {
+        "name": "no_upload",
+        "in": "query",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Set 'true' untuk mematikan upload otomatis"
+      }
     ],
     "responses": {
-      "200": { "description": "Sukses", "schema": { "type": "object", "example": { "status": true, "result": [ { "id": "456", "title": "..." } ] } } },
-      "500": { "description": "Server Error", "schema": { "type": "object", "example": { "status": false, "error": "Error message" } } }
+      "200": {
+        "description": "Respon berhasil",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "boolean", "example": true },
+                "creator": { "type": "string", "example": "Daps" },
+                "result": { "type": "array", "items": { "type": "object" } }
+              }
+            }
+          }
+        }
+      },
+      "500": { "description": "Gagal memproses request" }
     }
   }
 }
