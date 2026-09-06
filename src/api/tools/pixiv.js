@@ -295,9 +295,10 @@ async function randomPosts(n = 5, maxPage = 30) {
 }
 
 module.exports = function (app) {
-  // Endpoint: Search
-  app.get("/tools/pixiv/search", async (req, res) => {
-    const { q, page = 1, limit, order = "date_d", no_upload = "false" } = req.query;
+  // Endpoint: Search (Kategori Search)
+  const handleSearch = async (req, res) => {
+    const q = req.query.q || req.query.query;
+    const { page = 1, limit, order = "date_d", no_upload = "false" } = req.query;
     if (!q) return res.status(400).json({ status: false, error: "Parameter 'q' wajib diisi" });
 
     try {
@@ -311,12 +312,19 @@ module.exports = function (app) {
     } catch (error) {
       res.status(500).json({ status: false, error: error.message });
     }
-  });
+  };
+  app.get("/search/pixiv", handleSearch);
+  app.get("/tools/pixiv/search", handleSearch);
 
-  // Endpoint: Detail
-  app.get("/tools/pixiv/detail", async (req, res) => {
-    const { id, no_upload = "false" } = req.query;
-    if (!id || !/^\d+$/.test(id)) return res.status(400).json({ status: false, error: "Parameter 'id' (angka) wajib diisi" });
+  // Endpoint: Detail / Info (Kategori Info)
+  const handleDetail = async (req, res) => {
+    let id = req.query.id || req.query.url;
+    const { no_upload = "false" } = req.query;
+    if (id && typeof id === "string") {
+      const match = id.match(/artworks\/(\d+)/) || id.match(/(\d+)/);
+      if (match) id = match[1];
+    }
+    if (!id || !/^\d+$/.test(id)) return res.status(400).json({ status: false, error: "Parameter 'id' (angka atau link Pixiv) wajib diisi" });
 
     try {
       let d = await detail(id);
@@ -329,12 +337,19 @@ module.exports = function (app) {
     } catch (error) {
       res.status(500).json({ status: false, error: error.message });
     }
-  });
+  };
+  app.get("/info/pixiv", handleDetail);
+  app.get("/tools/pixiv/detail", handleDetail);
 
-  // Endpoint: Download lokal
-  app.get("/tools/pixiv/download", async (req, res) => {
-    const { id, all_pages = "false", out_dir = "downloads" } = req.query;
-    if (!id || !/^\d+$/.test(id)) return res.status(400).json({ status: false, error: "Parameter 'id' (angka) wajib diisi" });
+  // Endpoint: Download (Kategori Downloader)
+  const handleDownload = async (req, res) => {
+    let id = req.query.id || req.query.url;
+    const { all_pages = "false", out_dir = "downloads" } = req.query;
+    if (id && typeof id === "string") {
+      const match = id.match(/artworks\/(\d+)/) || id.match(/(\d+)/);
+      if (match) id = match[1];
+    }
+    if (!id || !/^\d+$/.test(id)) return res.status(400).json({ status: false, error: "Parameter 'id' (angka atau link Pixiv) wajib diisi" });
 
     try {
       const result = await downloadArtwork(id, {
@@ -345,10 +360,12 @@ module.exports = function (app) {
     } catch (error) {
       res.status(500).json({ status: false, error: error.message });
     }
-  });
+  };
+  app.get("/download/pixiv", handleDownload);
+  app.get("/tools/pixiv/download", handleDownload);
 
-  // Endpoint: Random
-  app.get("/tools/pixiv/random", async (req, res) => {
+  // Endpoint: Random (Kategori Image)
+  const handleRandom = async (req, res) => {
     const { num = 5, no_upload = "false" } = req.query;
     try {
       let posts = await randomPosts(parseInt(num) || 5);
@@ -369,5 +386,8 @@ module.exports = function (app) {
     } catch (error) {
       res.status(500).json({ status: false, error: error.message });
     }
-  });
+  };
+  app.get("/image/pixiv", handleRandom);
+  app.get("/image/pixiv-random", handleRandom);
+  app.get("/tools/pixiv/random", handleRandom);
 };
